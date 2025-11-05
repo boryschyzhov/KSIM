@@ -88,3 +88,42 @@ end
 ![Покращення інтерфейсу моделі](im4.png)
 
 
+Була змінена функція де вовк знаходить вівцю.
+Замість
+<pre>
+to eat-sheep  ; wolf procedure
+  let prey one-of sheep-here                    ; grab a random sheep
+  if prey != nobody  [                          ; did we get one? if so,
+    ask prey [ die ]                            ; kill it, and...
+    set energy energy + wolf-gain-from-food     ; get energy from eating
+  ]
+end
+</pre>
+
+Додаємо шанс протидії
+
+<pre>
+to eat-sheep
+  if any? sheep-here [
+    let target one-of sheep-here
+    if sheep-counter [
+      if (random 100) < counter-chance [
+        ask target [ die ]  
+        die                 
+        stop
+      ] 
+    ]
+    ask target [ die ]
+    set energy energy + wolf-gain-from-food
+  ]
+end
+</pre>
+
+**Ключові моменти:**
+- Якщо *sheep-counter = off* — все працює як раніше
+- Якщо *on* — кожна атака перевіряє шанс
+- Якщо шанс спрацює то вовк і вівця помирають одночасно
+- Якщо ні — вівця вмирає як завжди, вовк їсть і живе
+- Вовк отримує енергію лише якщо вижив.
+
+![Скріншот моделі в процесі симуляції](imlab2_test1.png)
