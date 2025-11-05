@@ -14,7 +14,9 @@
 
 Виправлення викликів у to **go**, а саме заміна одного універсального правила **move** на окремі **move-sheep** та **move-wolf** оскільки раніше і вовки, і вівці викликали однакову move, тепер робимо дві окремі.
 
-Замість
+
+
+Замість move
 
 <pre>
 to move  ; turtle procedure
@@ -41,15 +43,34 @@ to move-sheep
 end
 </pre>
 
-Та вовків: 
+Та вовків, але добавимо умову, що вовк може пересуватися лише коли одн на клітинці. Якщо вовк один на клітинці то ходить нормально. Якщо в клітинці вже є інший вовк, інший вовк пропускає хід, стоїть і чекає Як тільки один із них піде — другий може знову ходити
 
 <pre>
 to move-wolf
-  if heading = heading
-  [ 
-    rt random 50
-    lt random 50
-    fd 1
+  
+  ifelse count wolves-here > 1 [
+    stop     ]
+[
+  
+  rt random 50
+  lt random 50
+  fd 1
   ]
 end
 </pre>
+
+Добавимо функцію, коли вовк перед початком свого ходу буде оглядатися.
+
+<pre>
+to look-around-wolf
+  let vision-radius 2 
+  let candidate-patches patches in-radius vision-radius with [ any? sheep-here and not any? wolves-here ]
+  if any? candidate-patches [
+    
+    let nearest-min min [ distance myself ] of candidate-patches
+    let nearest-patches candidate-patches with [ distance myself = nearest-min ]
+    face one-of nearest-patches
+  ]
+end
+</pre>
+
