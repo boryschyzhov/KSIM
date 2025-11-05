@@ -28,11 +28,12 @@ end
 
 <pre>
 to move-sheep
-  if any? wolves-on neighbors [
+  
+  ifelse any? wolves-on neighbors [
     rt 180
     fd 1
   ]
-  else [
+  [
     rt random 50
     lt random 50
     fd 1
@@ -44,9 +45,8 @@ end
 
 <pre>
 to move-wolf
-  
-  ifelse heading = heading ble
-  [
+  if heading = heading
+  [ 
     rt random 50
     lt random 50
     fd 1
